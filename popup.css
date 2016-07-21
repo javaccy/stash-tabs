@@ -1,0 +1,18 @@
+body {
+  overflow: hidden;
+  margin: 10px;
+  padding: 0px;
+  background: white;
+  width: 300px;
+}
+
+div {
+  padding: 1px 3px;
+  font-family: sans-serif;
+  font-size: 10pt;
+  margin-top: 1px;
+}
+
+#new-stash-name {
+  width: 100%;
+}
