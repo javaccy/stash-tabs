@@ -12,9 +12,6 @@ let getRandomString = function (length) {
   return text;
 }
 
-let getTabsToStash = () => chrome.promise.tabs.query(
-  { currentWindow: true, highlighted: true });
-
 let transformTabsForStorage = (tabs) => tabs.map(tab =>
   ({
     title: tab.title,
@@ -32,9 +29,7 @@ let setStashes = stashes => chrome.promise.storage.sync.set({ stashes: stashes }
 
 let sanitizeName = name => (name.trim() || 'Untitled stash')
 
-let saveStash = function (name) {
-  let tabsPromise = getTabsToStash();
-
+let saveStash = function (name, tabsPromise) {
   let stashesPromise = getStashes();
 
   let savePromise = Promise.all([tabsPromise, stashesPromise])
@@ -65,9 +60,7 @@ let deleteStash = function (stashId) {
     });
 };
 
-let topUp = function (stashId) {
-  let tabsPromise = getTabsToStash();
-
+let topUp = function (stashId, tabsPromise) {
   let savePromise = tabsPromise.then(tabs => {
     getStashes()
       .then(stashes => {

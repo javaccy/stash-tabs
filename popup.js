@@ -5,6 +5,9 @@ function init() {
 
   let newStashNameInput = document.getElementById('new-stash-name');
 
+  let highlightedTabsPromise = chrome.promise.tabs.query(
+    { currentWindow: true, highlighted: true });
+
   let renderStashes = function () {
     getStashes().then(stashes => {
       stashesEl.innerHTML = '';
@@ -43,7 +46,7 @@ function init() {
         let topUpButton = document.createElement('button');
         topUpButton.innerText = 'Top up';
         topUpButton.onclick = (e) => {
-          topUp(stashId);
+          topUp(stashId, highlightedTabsPromise);
         };
         buttonRow.appendChild(topUpButton);
 
@@ -70,7 +73,7 @@ function init() {
   newStashNameInput.onkeypress = function (e) {
     if (e.keyCode == '13') {
       // Enter pressed
-      saveStash(newStashNameInput.value).then(() => {
+      saveStash(newStashNameInput.value, highlightedTabsPromise).then(() => {
         newStashNameInput.value = '';
       });
     }
