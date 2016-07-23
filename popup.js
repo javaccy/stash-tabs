@@ -1,19 +1,20 @@
 'use strict';
 
 function init() {
-  let stashesDiv = document.getElementById("stash-list");
+  let stashesEl = document.getElementById("stash-list");
 
   let newStashNameInput = document.getElementById('new-stash-name');
 
   let renderStashes = function () {
     getStashes().then(stashes => {
-      stashesDiv.innerHTML = '';
+      stashesEl.innerHTML = '';
       let sortedStashIds = _.orderBy(Object.keys(stashes),
         stashId => stashes[stashId].timestamp, ['desc']);
       for (let stashId of sortedStashIds) {
         let stash = stashes[stashId];
-        let stashDiv = document.createElement('div');
+        let stashEl = document.createElement('stash');
 
+        let titleRow = document.createElement('title-row');
         let title = document.createElement('a');
         title.innerText = stash.name + ' (' + stash.tabs.length + ' ' +
           (stash.tabs.length == 1 ? 'tab' : 'tabs')  + ')';
@@ -22,7 +23,14 @@ function init() {
           openStash(stash);
           e.preventDefault();
         };
-        stashDiv.appendChild(title);
+        titleRow.appendChild(title);
+        stashEl.appendChild(titleRow);
+
+        let timeLabel = document.createElement('time-label');
+        timeLabel.innerText = moment(stash.timestamp).fromNow();
+        stashEl.appendChild(timeLabel);
+
+        let buttonRow = document.createElement('button-row');
 
         let renameButton = document.createElement('button');
         renameButton.innerText = 'Rename';
@@ -30,30 +38,31 @@ function init() {
           chrome.extension.getBackgroundPage().renameStashPrompt(stashId,
             stash.name);
         };
-        stashDiv.appendChild(renameButton);
+        buttonRow.appendChild(renameButton);
 
         let topUpButton = document.createElement('button');
         topUpButton.innerText = 'Top up';
         topUpButton.onclick = (e) => {
           topUp(stashId);
         };
-        stashDiv.appendChild(topUpButton);
+        buttonRow.appendChild(topUpButton);
 
         let deleteButton = document.createElement('button');
         deleteButton.innerText = 'Delete';
         deleteButton.onclick = (e) => {
           deleteStash(stashId);
         };
-        stashDiv.appendChild(deleteButton);
+        buttonRow.appendChild(deleteButton);
 
         let openAndDeleteButton = document.createElement('button');
         openAndDeleteButton.innerText = 'Open & delete';
         openAndDeleteButton.onclick = (e) => {
           deleteStash(stashId).then(() => openStash(stash));
         };
-        stashDiv.appendChild(openAndDeleteButton);
+        buttonRow.appendChild(openAndDeleteButton);
 
-        stashesDiv.appendChild(stashDiv);
+        stashEl.appendChild(buttonRow);
+        stashesEl.appendChild(stashEl);
       }
     });
   };
