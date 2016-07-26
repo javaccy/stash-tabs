@@ -50,7 +50,7 @@ function init() {
         } else {
           caption += highlightedTabs.length + ' tabs';
         }
-        topUpButton.innerText = 'Top up';
+        topUpButton.innerText = caption;
         topUpButton.onclick = (e) => {
           topUp(stashId, highlightedTabsPromise);
         };
@@ -91,7 +91,7 @@ function init() {
         inputRowWindow.style.display = 'none';
         tip.style.display = 'none';
       } else {
-        let modifierKey = (navigator.platform.toUpperCase().indexOf('MAC') >= 0) ? 'Cmd' : 'Ctrl';
+        let modifierKey = (navigator.platform.toLowerCase().indexOf('mac') >= 0) ? 'Cmd' : 'Ctrl';
         tip.innerText = 'Tip: select multiple tabs to stash by ' + modifierKey + '- or Shift-clicking tab handles.'
       }
       if (highlightedTabs.length > 1) {
