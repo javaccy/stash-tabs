@@ -3,13 +3,21 @@
 function init() {
   let stashesEl = document.getElementById("stash-list");
 
-  let newStashNameInput = document.getElementById('new-stash-name');
+  let newStashNameInputTabs = document.getElementById('new-stash-name-tabs');
+  let newStashNameInputWindow = document.getElementById('new-stash-name-window');
+  let stashTabsButton = document.getElementById('stash-tabs');
+  let stashWindowButton = document.getElementById('stash-window');
+  let inputRowWindow = document.getElementById('input-row-window');
+  let tip = document.getElementById('tip');
 
   let highlightedTabsPromise = chrome.promise.tabs.query(
     { currentWindow: true, highlighted: true });
 
+  let windowTabsPromise = chrome.promise.tabs.query(
+    { currentWindow: true });
+
   let renderStashes = function () {
-    getStashes().then(stashes => {
+    Promise.all([getStashes(), highlightedTabsPromise]).then(([stashes, highlightedTabs]) => {
       stashesEl.innerHTML = '';
       let sortedStashIds = _.orderBy(Object.keys(stashes),
         stashId => stashes[stashId].timestamp, ['desc']);
@@ -35,6 +43,19 @@ function init() {
 
         let buttonRow = document.createElement('button-row');
 
+        let topUpButton = document.createElement('button');
+        let caption = 'Add ';
+        if (highlightedTabs.length == 1) {
+          caption += 'this tab';
+        } else {
+          caption += highlightedTabs.length + ' tabs';
+        }
+        topUpButton.innerText = 'Top up';
+        topUpButton.onclick = (e) => {
+          topUp(stashId, highlightedTabsPromise);
+        };
+        buttonRow.appendChild(topUpButton);
+
         let renameButton = document.createElement('button');
         renameButton.innerText = 'Rename';
         renameButton.onclick = (e) => {
@@ -42,13 +63,6 @@ function init() {
             stash.name);
         };
         buttonRow.appendChild(renameButton);
-
-        let topUpButton = document.createElement('button');
-        topUpButton.innerText = 'Top up';
-        topUpButton.onclick = (e) => {
-          topUp(stashId, highlightedTabsPromise);
-        };
-        buttonRow.appendChild(topUpButton);
 
         let deleteButton = document.createElement('button');
         deleteButton.innerText = 'Delete';
@@ -59,6 +73,7 @@ function init() {
 
         let openAndDeleteButton = document.createElement('button');
         openAndDeleteButton.innerText = 'Open & delete';
+        openAndDeleteButton.classList.add('primary');
         openAndDeleteButton.onclick = (e) => {
           deleteStash(stashId).then(() => openStash(stash));
         };
@@ -70,12 +85,52 @@ function init() {
     });
   };
 
-  newStashNameInput.onkeypress = function (e) {
+  let render = function () {
+    Promise.all([highlightedTabsPromise, windowTabsPromise]).then(([highlightedTabs, windowTabs]) => {
+      if (highlightedTabs.length > 1 || windowTabs.length == 1) {
+        inputRowWindow.style.display = 'none';
+        tip.style.display = 'none';
+      } else {
+        let modifierKey = (navigator.platform.toUpperCase().indexOf('MAC') >= 0) ? 'Cmd' : 'Ctrl';
+        tip.innerText = 'Tip: select multiple tabs to stash by ' + modifierKey + '- or Shift-clicking tab handles.'
+      }
+      if (highlightedTabs.length > 1) {
+        stashTabsButton.innerText = 'Stash ' + highlightedTabs.length + ' tabs';
+      }
+      if (highlightedTabs.length == 1) {
+        newStashNameInputTabs.value = highlightedTabs[0].title || '';
+      }
+    });
+    renderStashes();
+  };
+
+  let stashTabs = function () {
+    saveStash(newStashNameInputTabs.value, highlightedTabsPromise).then(() => {
+      newStashNameInputTabs.value = '';
+    });
+  };
+
+  stashTabsButton.onclick = stashTabs;
+
+  newStashNameInputTabs.onkeypress = function (e) {
     if (e.keyCode == '13') {
       // Enter pressed
-      saveStash(newStashNameInput.value, highlightedTabsPromise).then(() => {
-        newStashNameInput.value = '';
-      });
+      stashTabs();
+    }
+  };
+
+  let stashWindow = function () {
+    saveStash(newStashNameInputWindow.value, windowTabsPromise).then(() => {
+      newStashNameInputWindow.value = '';
+    });
+  };
+
+  stashWindowButton.onclick = stashWindow;
+
+  newStashNameInputWindow.onkeypress = function (e) {
+    if (e.keyCode == '13') {
+      // Enter pressed
+      stashWindow();
     }
   };
 
@@ -85,7 +140,7 @@ function init() {
     }
   });
 
-  renderStashes();
+  render();
 }
 
 // Kick things off.

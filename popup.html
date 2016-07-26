@@ -11,7 +11,15 @@
   </head>
   <body>
     <header>
-      <input type="text" id="new-stash-name" placeholder="Type new stash name & hit Enter" autofocus>
+      <input-row id="input-row-window">
+        <input type="text" class="new-stash-name" id="new-stash-name-window" placeholder="Type stash name & hit Enter">
+        <button id="stash-window" tabindex="-1" class="primary">Stash window</button>
+      </input-row>
+      <input-row id="input-row-tab">
+        <input type="text" class="new-stash-name" id="new-stash-name-tabs" placeholder="Type stash name & hit Enter">
+        <button id="stash-tabs" tabindex="-1" class="primary">Stash this tab</button>
+      </input-row>
+      <tip id="tip"></tip>
     </header>
     <div id="stash-list"></div>
   </body>
