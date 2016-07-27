@@ -8,6 +8,7 @@ function init() {
   let stashTabsButton = document.getElementById('stash-tabs');
   let stashWindowButton = document.getElementById('stash-window');
   let inputRowWindow = document.getElementById('input-row-window');
+  let inputRowTabs = document.getElementById('input-row-tabs');
   let tip = document.getElementById('tip');
 
   let highlightedTabsPromise = chrome.promise.tabs.query(
@@ -26,15 +27,8 @@ function init() {
         let stashEl = document.createElement('stash');
 
         let titleRow = document.createElement('title-row');
-        let title = document.createElement('a');
-        title.innerText = stash.name + ' (' + stash.tabs.length + ' ' +
+        titleRow.innerText = stash.name + ' (' + stash.tabs.length + ' ' +
           (stash.tabs.length == 1 ? 'tab' : 'tabs')  + ')';
-        title.href = '';
-        title.onclick = (e) => {
-          openStash(stash);
-          e.preventDefault();
-        };
-        titleRow.appendChild(title);
         stashEl.appendChild(titleRow);
 
         let timeLabel = document.createElement('time-label');
@@ -72,10 +66,14 @@ function init() {
         buttonRow.appendChild(deleteButton);
 
         let openAndDeleteButton = document.createElement('button');
-        openAndDeleteButton.innerText = 'Open & delete';
+        openAndDeleteButton.innerText = 'Unstash';
         openAndDeleteButton.classList.add('primary');
         openAndDeleteButton.onclick = (e) => {
-          deleteStash(stashId).then(() => openStash(stash));
+          deleteStash(stashId)
+            .then(() => openStash(stash))
+            .then(win => {
+              chrome.extension.getBackgroundPage().windows[win.id] = stash;
+            });
         };
         buttonRow.appendChild(openAndDeleteButton);
 
@@ -87,10 +85,17 @@ function init() {
 
   let render = function () {
     Promise.all([highlightedTabsPromise, windowTabsPromise]).then(([highlightedTabs, windowTabs]) => {
-      if (highlightedTabs.length > 1 || windowTabs.length == 1) {
+      if (highlightedTabs.length > 1) {
         inputRowWindow.style.display = 'none';
         tip.style.display = 'none';
       } else {
+        if (windowTabs.length == 1) {
+          inputRowTabs.style.display = 'none';
+        }
+        let originalStash = chrome.extension.getBackgroundPage().windows[highlightedTabs[0].windowId];
+        if (originalStash && originalStash.name != tabNamePlaceholder) {
+          newStashNameInputWindow.value = originalStash.name;
+        }
         let modifierKey = (navigator.platform.toLowerCase().indexOf('mac') >= 0) ? 'Cmd' : 'Ctrl';
         tip.innerText = 'Tip: select multiple tabs to stash by ' + modifierKey + '- or Shift-clicking tab handles.'
       }

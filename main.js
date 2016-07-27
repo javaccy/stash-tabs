@@ -3,6 +3,8 @@
 // See https://github.com/tfoxy/chrome-promise
 chrome.promise = new ChromePromise();
 
+const tabNamePlaceholder = 'Untitled stash';
+
 let getRandomString = function (length) {
   let text = "";
   let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -27,7 +29,7 @@ let getStashes = function () {
 
 let setStashes = stashes => chrome.promise.storage.sync.set({ stashes: stashes });
 
-let sanitizeName = name => (name.trim() || 'Untitled stash')
+let sanitizeName = name => (name.trim() || tabNamePlaceholder)
 
 let saveStash = function (name, tabsPromise) {
   let stashesPromise = getStashes();
