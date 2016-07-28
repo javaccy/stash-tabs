@@ -27,6 +27,7 @@ tip {
   display: block;
   padding: 9px 12px;
   color: #A9A9A9;
+  font-size: 12px;
 }
 
 input-row button {
@@ -37,7 +38,6 @@ input-row button {
 
 #stash-div {
   font-family: sans-serif;
-  font-size: 10pt;
   margin-top: 1px;
 }
 
@@ -58,9 +58,9 @@ title-row {
 
 time-label {
   display: block;
-  font-size: 11px;
+  font-size: 12px;
   color: #A9A9A9;
-  margin: 1px 0px 6px;
+  margin: 2px 0px 6px;
 }
 
 button-row {
