@@ -8,6 +8,8 @@ Compared to bookmarking + closing windows, this extension offers the following c
 
 - Chrome lets you select several tabs by Shift- or Cmd/Ctrl-clicking tab handles. By taking advantage of this feature, the extension lets you stash only some of the tabs in a window (but you can still stash the entire window or a single tab).
 
+- Saving and closing is one operation.
+
 - Stashes are stored in an easily accessible list, with more recent ones on top, and with an indication of how long ago the stash was created.
 
 - Stashes do not accumulate over time because unstashing automatically removes the stash from your list. You either have the window open, or you have it stashed, but not both.
