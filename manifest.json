@@ -1,6 +1,6 @@
 {
   "name": "Stash Tabs",
-  "version": "1.2",
+  "version": "1.3",
   "description": "A lightweight take on the problem of too many tabs.",
   "permissions": [
     "tabs", "storage"
