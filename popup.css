@@ -13,25 +13,25 @@ button:hover {
 body {
   overflow: auto;
   margin: 0px;
-  padding: 9px 0;
+  padding: 4px 0;
   background: white;
   width: 330px;
 }
 
 input-row {
   display: flex;
-  margin: 9px 11px;
+  margin: 11px 11px;
 }
 
 tip {
   display: block;
-  padding: 9px 12px 6px;
+  padding: 9px 12px;
   color: #A9A9A9;
 }
 
 input-row button {
   min-width: 99px;
-  margin-left: 8px;
+  margin-left: 7px;
   font-size: 13px;
 }
 
@@ -43,7 +43,7 @@ input-row button {
 
 stash {
   display: block;
-  padding: 11px 12px;
+  padding: 10px 12px 12px;
 }
 
 title-row {
@@ -81,7 +81,7 @@ button-row button:last-child {
   font-size: 13px;
   outline: none;
   border: 1px solid #E0E0E0;
-  padding: 5px;
+  padding: 4px;
   font-family: sans-serif;
 }
 
