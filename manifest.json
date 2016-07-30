@@ -1,7 +1,7 @@
 {
   "name": "Stash Tabs",
-  "version": "1.4",
-  "description": "A lightweight take on the problem of too many tabs.",
+  "version": "1.5",
+  "description": "Stash away the tabs you don't need and reopen them later. A lightweight take on the problem of too many tabs.",
   "permissions": [
     "tabs", "storage"
   ],

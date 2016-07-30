@@ -1,12 +1,12 @@
-# Stash tabs
+# Stash Tabs (a Chrome extension)
 
-A Chrome extension that is a lightweight take on the problem of too many tabs.
+Stash away the tabs you don't need and reopen them later. A lightweight take on the problem of too many tabs.
 
 ## Features
 
-Compared to bookmarking + closing windows, this extension offers the following conveniences:
+Compared to bookmarking + closing windows, this extension offers the following advantages:
 
-- Chrome lets you select several tabs by Shift- or Cmd/Ctrl-clicking tab handles. By taking advantage of this feature, the extension lets you stash only some of the tabs in a window (but you can still stash the entire window or a single tab).
+- Chrome lets you select several tabs by Shift- or Cmd/Ctrl-clicking tab handles. By taking advantage of this feature, the extension lets you stash only some of the tabs in a window (but you can still stash the entire window if you want to).
 
 - Saving and closing is one operation.
 
@@ -14,7 +14,7 @@ Compared to bookmarking + closing windows, this extension offers the following c
 
 - Stashes do not accumulate over time because unstashing automatically removes the stash from your list. You either have the window open, or you have it stashed, but not both.
 
-- You can unstash a set of tabs to a new winow, modify it, then restash it (the extension will prefill the stash name that you typed originally — try it to see how it works).
+- You can unstash a set of tabs to a new winow, modify it, then restash it (the extension will prefill the stash name that you typed originally).
 
 As with bookmarks, if you use multiple desktops, stashes will be synced between them.
 
