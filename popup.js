@@ -28,7 +28,7 @@ function init() {
 
         let titleRow = document.createElement('title-row');
         titleRow.innerText = stash.name + ' (' + stash.tabs.length + ' ' +
-          (stash.tabs.length == 1 ? 'tab' : 'tabs')  + ')';
+          (stash.tabs.length == 1 ? 'tab' : 'tabs') + ')';
         stashEl.appendChild(titleRow);
 
         let timeLabel = document.createElement('time-label');
