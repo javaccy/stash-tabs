@@ -22,6 +22,8 @@ let transformTabsForStorage = (tabs) => tabs.map(tab =>
   })
 );
 
+let getStashNameStorageKey = windowId => 'stashName_' + windowId;
+
 let getStashes = function () {
   return chrome.promise.storage.sync.get({ stashes: {} })
     .then(results => results.stashes);

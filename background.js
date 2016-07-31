@@ -7,5 +7,3 @@ window.renameStashPrompt = function (stashId, currentName) {
     return renameStash(stashId, newName);
   }
 };
-
-window.windows = {};

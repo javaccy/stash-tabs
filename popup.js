@@ -72,7 +72,10 @@ function init() {
           deleteStash(stashId)
             .then(() => openStash(stash))
             .then(win => {
-              chrome.extension.getBackgroundPage().windows[win.id] = stash;
+              // We can't use popup's sessionStorage because of this issue:
+              // https://bugs.chromium.org/p/chromium/issues/detail?id=42599
+              chrome.extension.getBackgroundPage().sessionStorage.setItem(
+                getStashNameStorageKey(win.id), stash.name);
             });
         };
         buttonRow.appendChild(openAndDeleteButton);
@@ -92,9 +95,10 @@ function init() {
         if (windowTabs.length == 1) {
           inputRowTabs.style.display = 'none';
         }
-        let originalStash = chrome.extension.getBackgroundPage().windows[highlightedTabs[0].windowId];
-        if (originalStash && originalStash.name != tabNamePlaceholder) {
-          newStashNameInputWindow.value = originalStash.name;
+        let originalStashName = chrome.extension.getBackgroundPage()
+          .sessionStorage.getItem(getStashNameStorageKey(highlightedTabs[0].windowId));
+        if (originalStashName && originalStashName != tabNamePlaceholder) {
+          newStashNameInputWindow.value = originalStashName;
         }
         let modifierKey = (navigator.platform.toLowerCase().indexOf('mac') >= 0) ? 'Cmd' : 'Ctrl';
         tip.innerText = 'Tip: select multiple tabs to stash by ' + modifierKey + '- or Shift-clicking tab handles.'
