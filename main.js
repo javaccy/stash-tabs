@@ -129,6 +129,7 @@ let topUp = function (stashId, tabsPromise) {
         if (!(stashId in stashes)) return;
         stashes[stashId].tabs = stashes[stashId].tabs.concat(
           transformTabsForStorage(tabs));
+        stashes[stashId].timestamp = (new Date()).toISOString();
         return setStashes(stashes);
       });
   });
