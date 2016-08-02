@@ -107,7 +107,11 @@ let saveStash = function (name, tabsPromise) {
 };
 
 let openStash = function (stash) {
-  return chrome.promise.windows.create({ url: stash.tabs.map(tab => tab.url) });
+  return chrome.promise.windows.create({ url: stash.tabs.map(tab => tab.url) })
+    .then(window => {
+      return chrome.promise.tabs.update(window.tabs[window.tabs.length - 1].id,
+        {active: true});
+    });
 };
 
 let deleteStash = function (stashId) {
