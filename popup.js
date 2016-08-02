@@ -144,9 +144,7 @@ function init() {
   };
 
   chrome.storage.onChanged.addListener((changes, areaName) => {
-    if ('stashes' in changes) {
-      renderStashes();
-    }
+    render();
   });
 
   render();
