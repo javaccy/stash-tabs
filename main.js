@@ -3,7 +3,7 @@
 // See https://github.com/tfoxy/chrome-promise
 chrome.promise = new ChromePromise();
 
-const tabNamePlaceholder = 'Untitled stash';
+const stashNamePlaceholder = 'Untitled stash';
 
 let getRandomString = function (length) {
   let text = "";
@@ -85,23 +85,17 @@ let setStashes = stashes => {
     })
 };
 
-let sanitizeName = name => (name.trim() || tabNamePlaceholder)
-
-let saveStash = function (name, tabsPromise) {
-  let stashesPromise = getStashes();
-
-  let savePromise = Promise.all([tabsPromise, stashesPromise])
-    .then(([tabs, stashes]) => {
+let saveStash = function (name, tabs) {
+  getStashes()
+    .then(stashes => {
       stashes[getRandomString(10)] = {
-        name: sanitizeName(name),
+        name: name.trim(),
         timestamp: (new Date()).toISOString(),
         tabs: transformTabsForStorage(tabs)
       };
       return setStashes(stashes);
-    });
-
-  return Promise.all([tabsPromise, savePromise])
-    .then(([tabs, savePromiseValue]) => {
+    })
+    .then(() => {
       return chrome.promise.tabs.remove(tabs.map(tab => tab.id));
     });
 };
@@ -112,7 +106,7 @@ let openStash = function (stash) {
   return windowPromise
     .then(window => {
       return chrome.promise.tabs.update(window.tabs[window.tabs.length - 1].id,
-        {active: true});
+        { active: true });
     })
     .then(() => {
       return windowPromise;
@@ -127,28 +121,16 @@ let deleteStash = function (stashId) {
     });
 };
 
-let topUp = function (stashId, tabsPromise) {
-  let savePromise = tabsPromise.then(tabs => {
-    getStashes()
-      .then(stashes => {
-        if (!(stashId in stashes)) return;
-        stashes[stashId].tabs = stashes[stashId].tabs.concat(
-          transformTabsForStorage(tabs));
-        stashes[stashId].timestamp = (new Date()).toISOString();
-        return setStashes(stashes);
-      });
-  });
-
-  return Promise.all([tabsPromise, savePromise])
-    .then(([tabs, savePromiseValue]) => {
+let topUp = function (stashId, tabs) {
+  getStashes()
+    .then(stashes => {
+      if (!(stashId in stashes)) return;
+      stashes[stashId].tabs = stashes[stashId].tabs.concat(
+        transformTabsForStorage(tabs));
+      stashes[stashId].timestamp = (new Date()).toISOString();
+      return setStashes(stashes);
+    })
+    .then(() => {
       return chrome.promise.tabs.remove(tabs.map(tab => tab.id));
     });
-};
-
-let renameStash = function (stashId, newName) {
-  getStashes().then(stashes => {
-    if (!(stashId in stashes)) return;
-    stashes[stashId].name = sanitizeName(newName);
-    return setStashes(stashes);
-  });
 };

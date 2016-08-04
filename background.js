@@ -1,9 +1,10 @@
-// Prompt is displayed by the background page because if the popup page displays
-// it, the prompt gets immediately closed (attempt to diplay prompt closes the
-// popup and this in turn dismisses the prompt).
-window.renameStashPrompt = function (stashId, currentName) {
-  let newName = prompt('Enter new name:', currentName);
-  if (newName !== null) {
-    return renameStash(stashId, newName);
-  }
+window.unstash = function (stashId, stash) {
+  deleteStash(stashId)
+    .then(() => openStash(stash))
+    .then(chromeWindow => {
+      // We can't use popup's sessionStorage because of this issue:
+      // https://bugs.chromium.org/p/chromium/issues/detail?id=42599
+      window.sessionStorage.setItem(
+        getStashNameStorageKey(chromeWindow.id), stash.name);
+    });
 };

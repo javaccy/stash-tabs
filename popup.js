@@ -1,154 +1,92 @@
 'use strict';
 
-function init() {
-  let stashesEl = document.getElementById("stash-list");
+// Makes sure MDL hides/shows placeholder when value is set programmatically.
+let fixIsDirty = () => {
+  for (let input of document.querySelectorAll('.mdl-textfield__input')) {
+    input.parentElement.classList.toggle('is-dirty', !!input.value);
+  }
+};
 
-  let newStashNameInputTabs = document.getElementById('new-stash-name-tabs');
-  let newStashNameInputWindow = document.getElementById('new-stash-name-window');
-  let stashTabsButton = document.getElementById('stash-tabs');
-  let stashWindowButton = document.getElementById('stash-window');
-  let inputRowWindow = document.getElementById('input-row-window');
-  let inputRowTabs = document.getElementById('input-row-tabs');
-  let tip = document.getElementById('tip');
-
-  let highlightedTabsPromise = chrome.promise.tabs.query(
-    { currentWindow: true, highlighted: true });
-
-  let windowTabsPromise = chrome.promise.tabs.query(
-    { currentWindow: true });
-
-  let renderStashes = function () {
-    Promise.all([getStashes(), highlightedTabsPromise]).then(([stashes, highlightedTabs]) => {
-      stashesEl.innerHTML = '';
-      let sortedStashIds = _.orderBy(Object.keys(stashes),
-        stashId => stashes[stashId].timestamp, ['desc']);
-      for (let stashId of sortedStashIds) {
-        let stash = stashes[stashId];
-        let stashEl = document.createElement('stash');
-
-        let titleRow = document.createElement('title-row');
-        titleRow.innerText = stash.name + ' (' + stash.tabs.length + ' ' +
-          (stash.tabs.length == 1 ? 'tab' : 'tabs') + ')';
-        stashEl.appendChild(titleRow);
-
-        let timeLabel = document.createElement('time-label');
-        timeLabel.innerText = moment(stash.timestamp).fromNow();
-        stashEl.appendChild(timeLabel);
-
-        let buttonRow = document.createElement('button-row');
-
-        let topUpButton = document.createElement('button');
-        let caption = 'Add ';
-        if (highlightedTabs.length == 1) {
-          caption += 'this tab';
-        } else {
-          caption += highlightedTabs.length + ' tabs';
-        }
-        topUpButton.innerText = caption;
-        topUpButton.onclick = (e) => {
-          topUp(stashId, highlightedTabsPromise);
-        };
-        buttonRow.appendChild(topUpButton);
-
-        let renameButton = document.createElement('button');
-        renameButton.innerText = 'Rename';
-        renameButton.onclick = (e) => {
-          chrome.extension.getBackgroundPage().renameStashPrompt(stashId,
-            stash.name);
-        };
-        buttonRow.appendChild(renameButton);
-
-        let deleteButton = document.createElement('button');
-        deleteButton.innerText = 'Delete';
-        deleteButton.onclick = (e) => {
-          deleteStash(stashId);
-        };
-        buttonRow.appendChild(deleteButton);
-
-        let openAndDeleteButton = document.createElement('button');
-        openAndDeleteButton.innerText = 'Unstash';
-        openAndDeleteButton.classList.add('primary');
-        openAndDeleteButton.onclick = (e) => {
-          deleteStash(stashId)
-            .then(() => openStash(stash))
-            .then(win => {
-              // We can't use popup's sessionStorage because of this issue:
-              // https://bugs.chromium.org/p/chromium/issues/detail?id=42599
-              chrome.extension.getBackgroundPage().sessionStorage.setItem(
-                getStashNameStorageKey(win.id), stash.name);
-            });
-        };
-        buttonRow.appendChild(openAndDeleteButton);
-
-        stashEl.appendChild(buttonRow);
-        stashesEl.appendChild(stashEl);
-      }
-    });
-  };
-
-  let render = function () {
-    Promise.all([highlightedTabsPromise, windowTabsPromise]).then(([highlightedTabs, windowTabs]) => {
-      if (highlightedTabs.length > 1) {
-        inputRowWindow.style.display = 'none';
-        tip.style.display = 'none';
-      } else {
-        if (windowTabs.length == 1) {
-          inputRowTabs.style.display = 'none';
-        }
-        let originalStashName = chrome.extension.getBackgroundPage()
-          .sessionStorage.getItem(getStashNameStorageKey(highlightedTabs[0].windowId));
-        if (originalStashName && originalStashName != tabNamePlaceholder) {
-          newStashNameInputWindow.value = originalStashName;
-        }
-        let modifierKey = (navigator.platform.toLowerCase().indexOf('mac') >= 0) ? 'Cmd' : 'Ctrl';
-        tip.innerText = 'Tip: select multiple tabs to stash by ' + modifierKey + '- or Shift-clicking tab handles.'
-      }
-      if (highlightedTabs.length > 1) {
-        stashTabsButton.innerText = 'Stash ' + highlightedTabs.length + ' tabs';
-      }
-      if (highlightedTabs.length == 1) {
-        newStashNameInputTabs.value = highlightedTabs[0].title || '';
-      }
-    });
-    renderStashes();
-  };
-
-  let stashTabs = function () {
-    saveStash(newStashNameInputTabs.value, highlightedTabsPromise).then(() => {
-      newStashNameInputTabs.value = '';
-    });
-  };
-
-  stashTabsButton.onclick = stashTabs;
-
-  newStashNameInputTabs.onkeypress = function (e) {
-    if (e.keyCode == '13') {
-      // Enter pressed
-      stashTabs();
+let init = ([highlightedTabs, windowTabs, stashes]) => {
+  let mode;
+  if (windowTabs.length == 1) {
+    mode = 'singleTab';
+  } else {
+    if (highlightedTabs.length > 1) {
+      mode = 'selection';
+    } else {
+      mode = 'default';
     }
-  };
+  }
 
-  let stashWindow = function () {
-    saveStash(newStashNameInputWindow.value, windowTabsPromise).then(() => {
-      newStashNameInputWindow.value = '';
-    });
-  };
+  let originalStashName = chrome.extension.getBackgroundPage()
+    .sessionStorage.getItem(
+    getStashNameStorageKey(highlightedTabs[0].windowId));
 
-  stashWindowButton.onclick = stashWindow;
+  let stashNameTab;
+  if (mode == 'singleTab' && originalStashName) {
+    stashNameTab = originalStashName;
+  } else {
+    stashNameTab = highlightedTabs[0].title || '';
+  }
 
-  newStashNameInputWindow.onkeypress = function (e) {
-    if (e.keyCode == '13') {
-      // Enter pressed
-      stashWindow();
-    }
-  };
-
-  chrome.storage.onChanged.addListener((changes, areaName) => {
-    render();
+  Vue.filter('tabs', numTabs => {
+    return numTabs.toString() + (numTabs == 1 ? ' tab' : ' tabs');
   });
 
-  render();
-}
+  Vue.filter('from-now', timestamp => {
+    return moment(timestamp).fromNow();
+  });
 
-// Kick things off.
-document.addEventListener('DOMContentLoaded', init);
+  let vm = new Vue({
+    el: 'html',
+    data: {
+      mode: mode,
+      highlightedTabsLenth: highlightedTabs.length,
+      stashNameWindow: originalStashName,
+      stashNameTab: stashNameTab,
+      stathNameTabs: originalStashName,
+      stashes: stashes,
+      modifierKey: (navigator.platform.toLowerCase().indexOf('mac') >= 0) ?
+        'command' : 'ctrl',
+      stashNamePlaceholder: stashNamePlaceholder,
+      topUpTabsLabel: (mode == 'selection') ?
+        (highlightedTabs.length.toString() + ' tabs') : 'current tab'
+    },
+    methods: {
+      stashWindow: function () {
+        saveStash(this.stashNameWindow, windowTabs);
+      },
+      stashTab: function () {
+        saveStash(this.stashNameTab, highlightedTabs);
+      },
+      stashTabs: function () {
+        saveStash(this.stathNameTabs, highlightedTabs);
+      },
+      topUp: function (stashId) {
+        topUp(stashId, highlightedTabs);
+      },
+      unstash: function (stashId, stash) {
+        // Have to call the function in the background page because the popup
+        // closes too early.
+        chrome.extension.getBackgroundPage().unstash(stashId, stash);
+        // For better visual transition.
+        window.close();
+      },
+      deleteStash: deleteStash
+    },
+    ready: fixIsDirty
+  });
+
+  chrome.storage.onChanged.addListener((changes, areaName) => {
+    getStashes().then(stashes => {
+      vm.stashes = stashes;
+    });
+  });
+};
+
+Promise.all([
+  chrome.promise.tabs.query({ currentWindow: true, highlighted: true }),
+  chrome.promise.tabs.query({ currentWindow: true }),
+  getStashes()
+]).then(init);

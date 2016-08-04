@@ -1,90 +1,91 @@
-button {
-  border: none;
-  background: #2196F3;
-  font-family: inherit;
-  color: #fff;
+html {
+  /* Undo MDL setting. */
+  height: initial;
+  width: initial;
 }
 
-button:hover {
-  background: #1e88e5;
+[v-cloak] {
+  display: none;
 }
 
+.mdl-button {
+  height: 32px;
+  line-height: 32px;
+  font-weight: 400;
+}
+
+.mdl-button--icon {
+  overflow: visible;
+}
+
+.mdl-textfield__input, .mdl-textfield__label {
+  font-size: 14px;
+}
+
+.mdl-textfield__label {
+  top: 22px;
+}
+
+[class*=hint--]:after, [class*=hint--]:before {
+  text-transform: none;
+}
 
 body {
   overflow: auto;
   margin: 0px;
-  padding: 4px 0;
-  background: white;
-  width: 330px;
+  width: 420px;
+}
+
+header {
+  padding: 8px 16px;
 }
 
 input-row {
   display: flex;
-  margin: 11px 11px;
+  align-items: center;
+  text-align: right;
 }
 
-tip {
-  display: block;
-  padding: 9px 12px;
-  color: #A9A9A9;
-  font-size: 12px;
+input-row .mdl-textfield {
+  flex: 1;
+  margin: -5px 0px;
 }
 
 input-row button {
-  min-width: 99px;
-  margin-left: 7px;
-  font-size: 13px;
+  position: relative !important;
+  top: -1px;
+  margin-left: 10px !important;
+  min-width: 150px !important;
 }
 
-#stash-div {
-  font-family: sans-serif;
-  margin-top: 1px;
+.mdl-list {
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
-stash {
-  display: block;
-  padding: 10px 12px 12px;
-}
-
-title-row {
-  display: block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 13px;
-  font-weight: bold;
-  color: #545454;
-}
-
-time-label {
-  display: block;
-  font-size: 12px;
-  color: #A9A9A9;
-  margin: 2px 0px 6px;
-}
-
-button-row {
-  display: block;
-  margin: -1px;
-}
-
-button-row button {
-  margin-right: 7px;
-}
-
-button-row button:last-child {
-  margin-right: 0;
-}
-
-.new-stash-name {
-  flex: 1;
-  font-size: 13px;
+.mdl-list__item {
   outline: none;
-  border: 1px solid #E0E0E0;
-  padding: 4px;
-  font-family: sans-serif;
+  border-top: 1px solid rgba(0,0,0,.12);
+  cursor: pointer;
+  overflow: visible;
 }
 
-.new-stash-name:focus {
-  border-color: #1e88e5;
+.mdl-list__item-primary-content {
+  white-space: nowrap;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  height: 38px !important;
+}
+
+.mdl-list__item-secondary-content {
+  display: none !important;
+  flex-flow: row !important;
+}
+
+.mdl-list__item:hover .mdl-list__item-secondary-content {
+  display: flex !important;
+}
+
+.mdl-list__item-secondary-content button {
+  margin-left: 10px;
 }
