@@ -28,16 +28,75 @@ html {
 
 [class*=hint--]:after, [class*=hint--]:before {
   text-transform: none;
+  border-radius: 2px;
 }
 
 body {
   overflow: auto;
   margin: 0px;
   width: 420px;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+}
+
+welcome {
+  --color: #666;
+  color: var(--color);
+  text-align: center;
+  font-size: 16px;
+  font-weight: 300;
+  margin: 0 35px;
+  display: block;
+}
+
+welcome section,
+welcome footer {
+  margin: 48px 0;
+}
+
+welcome logo {
+  display: inline-block;
+  -webkit-mask-image: url('icon.png');
+  -webkit-mask-size: contain;
+  --size: 64px;
+  width: var(--size);
+  height: var(--size);
+  background-color: #42A5F5;
+  margin-top: -20px;
+  margin-bottom: -5px;
+  image-rendering: pixelated;
+}
+
+welcome img {
+  width: 240px;
+  margin-bottom: -3px;
+}
+
+welcome .mdl-button {
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12) !important;
 }
 
 header {
   padding: 8px 16px;
+}
+
+tip {
+  background-color: #4CAF50;
+  display: flex;
+  align-items: center;
+  color: #fff;
+  padding: 16px;
+  margin: 8px 0 10px;
+  border-radius: 2px;
+}
+
+tip i {
+  width: 52px;
+  margin: -2px;
+  font-size: 36px !important;
+}
+
+tip .content {
+  flex: 1;
 }
 
 input-row {

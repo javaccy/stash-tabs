@@ -7,7 +7,7 @@ let fixIsDirty = () => {
   }
 };
 
-let init = ([highlightedTabs, windowTabs, stashes]) => {
+let init = ([highlightedTabs, windowTabs, stashes, messages]) => {
   let mode;
   if (windowTabs.length == 1) {
     mode = 'singleTab';
@@ -47,11 +47,12 @@ let init = ([highlightedTabs, windowTabs, stashes]) => {
       stashNameTab: stashNameTab,
       stathNameTabs: originalStashName,
       stashes: stashes,
+      messages: messages,
       modifierKey: (navigator.platform.toLowerCase().indexOf('mac') >= 0) ?
-        'command' : 'ctrl',
+        'Command' : 'Control',
       stashNamePlaceholder: stashNamePlaceholder,
-      topUpTabsLabel: (mode == 'selection') ?
-        (highlightedTabs.length.toString() + ' tabs') : 'current tab'
+      topUpTabsLabel: mode == 'selection' ?
+        highlightedTabs.length.toString() + ' tabs' : 'current tab'
     },
     methods: {
       stashWindow: function () {
@@ -69,18 +70,27 @@ let init = ([highlightedTabs, windowTabs, stashes]) => {
       unstash: function (stashId, stash) {
         // Have to call the function in the background page because the popup
         // closes too early.
-        chrome.extension.getBackgroundPage().unstash(stashId, stash);
+        chrome.extension.getBackgroundPage().unstash(stashId, stash,
+          !this.messages.openStash);
         // For better visual transition.
         window.close();
       },
-      deleteStash: deleteStash
+      deleteStash: deleteStash,
+      gotIt: function () {
+        setMessageRead('welcome');
+        setTimeout(() => {
+          document.querySelector('.mdl-textfield__input').focus();
+        }, 100);
+      },
+      isEmpty: _.isEmpty
     },
     ready: fixIsDirty
   });
 
   chrome.storage.onChanged.addListener((changes, areaName) => {
-    getStashes().then(stashes => {
+    Promise.all([getStashes(), getMessages()]).then(([stashes, messages]) => {
       vm.stashes = stashes;
+      vm.messages = messages;
     });
   });
 };
@@ -88,5 +98,6 @@ let init = ([highlightedTabs, windowTabs, stashes]) => {
 Promise.all([
   chrome.promise.tabs.query({ currentWindow: true, highlighted: true }),
   chrome.promise.tabs.query({ currentWindow: true }),
-  getStashes()
+  getStashes(),
+  getMessages()
 ]).then(init);

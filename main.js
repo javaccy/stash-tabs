@@ -51,7 +51,12 @@ let getStashes = function () {
     });
 };
 
-let setStashes = stashes => {
+let getMessages = function () {
+  return chrome.promise.storage.sync.get('messages')
+    .then(items => items['messages'] || {});
+};
+
+let setStashes = function (stashes) {
   // We have to store tabs as individual items because of size limits of sync
   // API for a single item.
 
@@ -83,6 +88,13 @@ let setStashes = stashes => {
         setPromise = chrome.promise.storage.sync.set(itemsToStore);
       return Promise.all([removePromise, setPromise]);
     })
+};
+
+let setMessageRead = function (name) {
+  return getMessages().then(messages => {
+    messages[name] = true;
+    return chrome.promise.storage.sync.set({ messages: messages });
+  });
 };
 
 let saveStash = function (name, tabs) {

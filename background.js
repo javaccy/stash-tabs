@@ -1,4 +1,4 @@
-window.unstash = function (stashId, stash) {
+window.unstash = function (stashId, stash, shouldUpdateMessages) {
   deleteStash(stashId)
     .then(() => openStash(stash))
     .then(chromeWindow => {
@@ -7,4 +7,7 @@ window.unstash = function (stashId, stash) {
       window.sessionStorage.setItem(
         getStashNameStorageKey(chromeWindow.id), stash.name);
     });
+  if (shouldUpdateMessages) {
+    setMessageRead('openStash');
+  }
 };

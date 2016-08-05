@@ -6,9 +6,9 @@ Stash away the tabs you don't need and reopen them later. A lightweight take on 
 
 Compared to bookmarking + closing windows, this extension offers the following advantages:
 
-- Chrome lets you select several tabs by Shift- or Cmd/Ctrl-clicking tab handles. By taking advantage of this feature, the extension lets you stash only some of the tabs in a window (but you can still stash the entire window if you want to).
-
 - Saving and closing is one operation.
+
+- Chrome lets you select several tabs by Shift- or Cmd/Ctrl-clicking tab handles. By taking advantage of this feature, the extension lets you stash only some of the tabs in a window (but you can still stash the entire window if you want to).
 
 - Stashes are stored in an easily accessible list, with more recent ones on top, and with an indication of how long ago the stash was created.
 
