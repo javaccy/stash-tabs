@@ -93,6 +93,11 @@ let init = ([highlightedTabs, windowTabs, stashes, messages]) => {
       vm.messages = messages;
     });
   });
+
+  // Workaround for https://bugs.chromium.org/p/chromium/issues/detail?id=307912
+  setTimeout(() => {
+    document.body.style.width = '421px';
+  }, 200)
 };
 
 Promise.all([
