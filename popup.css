@@ -55,7 +55,7 @@ welcome footer {
 
 welcome logo {
   display: inline-block;
-  -webkit-mask-image: url('icon.png');
+  -webkit-mask-image: url('img/icon.png');
   -webkit-mask-size: contain;
   --size: 64px;
   width: var(--size);
