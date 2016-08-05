@@ -38,9 +38,9 @@
   <main v-else>
     <header>
       <tip v-if="!messages.openStash && !isEmpty(stashes)">
-        <i class="material-icons">information</i>
+        <i class="material-icons">info_outline</i>
         <div class="content">
-          Your stashes are displayed below. If you click one, it goes away from this popup and is opened in a new window.
+          Your stashes are displayed below. If you click one, it goes from this popup into a new window.
         </div>
       </tip>
       <input-row v-show="mode == 'default'">
