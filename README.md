@@ -1,6 +1,8 @@
 # Stash Tabs (a Chrome extension)
 
-Stash away the tabs you don't need and reopen them later. A lightweight take on the problem of too many tabs.
+Stash away the tabs you don't need at the moment and reopen them later. A lightweight take on the problem of too many tabs.
+
+Bookmarks are great; but what about links that you don't want to store permanently — do you have to keep them open, even as the number of tabs gets out of control? Stash Tabs is here to help.
 
 ## Features
 
