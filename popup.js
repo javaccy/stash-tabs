@@ -7,6 +7,8 @@ let fixIsDirty = () => {
   }
 };
 
+let getStashEl = el => el.closest('.stash');
+
 let init = ([highlightedTabs, windowTabs, stashes, messages]) => {
   let mode;
   if (windowTabs.length == 1) {
@@ -82,7 +84,44 @@ let init = ([highlightedTabs, windowTabs, stashes, messages]) => {
           document.querySelector('.mdl-textfield__input').focus();
         }, 100);
       },
-      isEmpty: _.isEmpty
+      isEmpty: _.isEmpty,
+      handleFocus: function (event) {
+        getStashEl(event.target).classList.add('focused');
+      },
+      handleBlur: function (event) {
+        let stashOut = getStashEl(event.target);
+        if (event.relatedTarget instanceof Element) {
+          let stashIn = getStashEl(event.relatedTarget);
+          if (stashIn === stashOut) return;
+        }
+        stashOut.classList.remove('focused');
+      },
+      up: function () {
+        let nextStash;
+        if (document.activeElement instanceof Element) {
+          let stash = getStashEl(document.activeElement);
+          if (stash) {
+            let next = stash.previousElementSibling;
+            if (next) next.focus();
+            return;
+          }
+        }
+        let first = document.getElementById('stash-list').lastElementChild;
+        if (first) first.focus();
+      },
+      down: function () {
+        let nextStash;
+        if (document.activeElement instanceof Element) {
+          let stash = getStashEl(document.activeElement);
+          if (stash) {
+            let next = stash.nextElementSibling;
+            if (next) next.focus();
+            return;
+          }
+        }
+        let first = document.getElementById('stash-list').firstElementChild;
+        if (first) first.focus();
+      }
     },
     ready: fixIsDirty
   });

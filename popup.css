@@ -122,11 +122,12 @@ input-row button {
   padding: 0 !important;
 }
 
-.mdl-list__item {
+.stash {
   outline: none;
   border-top: 1px solid rgba(0,0,0,.12);
   cursor: pointer;
   overflow: visible;
+  position: relative;
 }
 
 .mdl-list__item-primary-content {
@@ -141,8 +142,19 @@ input-row button {
   flex-flow: row !important;
 }
 
-.mdl-list__item:hover .mdl-list__item-secondary-content {
+.stash:hover .mdl-list__item-secondary-content,
+.stash.focused .mdl-list__item-secondary-content {
   display: flex !important;
+}
+
+.stash.focused::before {
+  content: "";
+  width: 3px;
+  top: -1px;
+  bottom: -1px;
+  background-color: #2196F3;
+  position: absolute;
+  left: 0;
 }
 
 .mdl-list__item-secondary-content button {
