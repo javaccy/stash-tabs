@@ -9,8 +9,9 @@ html {
 }
 
 .mdl-button {
-  height: 32px;
-  line-height: 32px;
+  font-size: 13px;
+  height: 31px;
+  line-height: 31px;
   font-weight: 400;
 }
 
@@ -111,8 +112,6 @@ input-row .mdl-textfield {
 }
 
 input-row button {
-  position: relative !important;
-  top: -1px;
   margin-left: 10px !important;
   min-width: 150px !important;
 }
