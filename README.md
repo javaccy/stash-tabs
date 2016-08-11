@@ -1,24 +1,20 @@
 # Stash Tabs (a Chrome extension)
 
-Stash away the tabs you don't need at the moment and reopen them later. A lightweight take on the problem of too many tabs.
-
-Bookmarks are great; but what about links that you don't want to store permanently — do you have to keep them open, even as the number of tabs gets out of control? Stash Tabs is here to help.
+Close the tabs you don't need at the moment and get back to them later. A lightweight solution to the problem of too many tabs.
 
 ## Features
 
-Compared to bookmarking + closing windows, this extension offers the following advantages:
-
-- Saving and closing is one operation.
-
-- Chrome lets you select several tabs by Shift- or Cmd/Ctrl-clicking tab handles. By taking advantage of this feature, the extension lets you stash only some of the tabs in a window (but you can still stash the entire window if you want to).
+- Chrome lets you select several tabs by Shift- or Cmd/Ctrl-clicking tab handles. By taking advantage of this feature, the extension lets you cherry-pick the tabs to stash.
 
 - Stashes are stored in an easily accessible list, with more recent ones on top, and with an indication of how long ago the stash was created.
 
 - Stashes do not accumulate over time because unstashing automatically removes the stash from your list. You either have the window open, or you have it stashed, but not both.
 
-- You can unstash a set of tabs to a new winow, modify it, then restash it (the extension will prefill the stash name that you typed originally).
+- You can unstash a set of tabs to a new winow, maybe modify it, then restash it (the extension will prefill the stash name that you typed originally).
 
-As with bookmarks, if you use multiple desktops, stashes will be synced between them.
+- If you use multiple desktops, stashes will be synced between them.
+
+- Keyboard support (Shift+Cmd+S to open popup on Mac, Shift+Ctrl+S on Windows or Linux, select stashes with arrow keys).
 
 ## Contributing
 
