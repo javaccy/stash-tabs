@@ -69,7 +69,6 @@ welcome logo {
 
 welcome img {
   width: 240px;
-  margin-bottom: -3px;
 }
 
 welcome .mdl-button {
@@ -85,14 +84,14 @@ tip {
   display: flex;
   align-items: center;
   color: #fff;
-  padding: 16px;
+  padding: 18px 16px;
   margin: 8px 0 10px;
   border-radius: 2px;
 }
 
 tip i {
   width: 64px;
-  margin: -2px;
+  margin: -4px;
   font-size: 48px !important;
 }
 
