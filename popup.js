@@ -96,31 +96,43 @@ let init = ([highlightedTabs, windowTabs, stashes, messages]) => {
         }
         stashOut.classList.remove('focused');
       },
-      up: function () {
+      up: function (event) {
         let nextStash;
         if (document.activeElement instanceof Element) {
           let stash = getStashEl(document.activeElement);
           if (stash) {
             let next = stash.previousElementSibling;
-            if (next) next.focus();
+            if (next) {
+              next.focus();
+              event.preventDefault();
+            }
             return;
           }
         }
         let first = document.getElementById('stash-list').lastElementChild;
-        if (first) first.focus();
+        if (first && first !== document.activeElement) {
+          first.focus();
+          event.preventDefault();
+        }
       },
-      down: function () {
+      down: function (event) {
         let nextStash;
         if (document.activeElement instanceof Element) {
           let stash = getStashEl(document.activeElement);
           if (stash) {
             let next = stash.nextElementSibling;
-            if (next) next.focus();
+            if (next) {
+              next.focus();
+              event.preventDefault();
+            }
             return;
           }
         }
         let first = document.getElementById('stash-list').firstElementChild;
-        if (first) first.focus();
+        if (first && first !== document.activeElement) {
+          first.focus();
+          event.preventDefault();
+        }
       }
     },
     ready: fixIsDirty
