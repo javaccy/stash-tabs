@@ -14,6 +14,33 @@ let tryToFocusOnInput = () => {
 
 let getStashEl = el => el.closest('.stash');
 
+// Moves focus to next/previous stash. Direction is 'up' or 'down'.
+let moveFocus = (direction, event) => {
+  let nextStash;
+  if (document.activeElement instanceof Element) {
+    let stash = getStashEl(document.activeElement);
+    if (stash) {
+      let next = stash[{
+        up: 'previousElementSibling',
+        down: 'nextElementSibling'
+      }[direction]];
+      if (next) {
+        next.focus();
+        event.preventDefault();
+      }
+      return;
+    }
+  }
+  let first = document.getElementById('stash-list')[{
+    up: 'lastElementChild',
+    down: 'firstElementChild'
+  }[direction]];
+  if (first && first !== document.activeElement) {
+    first.focus();
+    event.preventDefault();
+  }
+};
+
 let init = ([highlightedTabs, windowTabs, stashes, messages,
   originalStashName]) => {
   let mode;
@@ -97,42 +124,10 @@ let init = ([highlightedTabs, windowTabs, stashes, messages,
         stashOut.classList.remove('focused');
       },
       up: function (event) {
-        let nextStash;
-        if (document.activeElement instanceof Element) {
-          let stash = getStashEl(document.activeElement);
-          if (stash) {
-            let next = stash.previousElementSibling;
-            if (next) {
-              next.focus();
-              event.preventDefault();
-            }
-            return;
-          }
-        }
-        let first = document.getElementById('stash-list').lastElementChild;
-        if (first && first !== document.activeElement) {
-          first.focus();
-          event.preventDefault();
-        }
+        moveFocus('up', event);
       },
       down: function (event) {
-        let nextStash;
-        if (document.activeElement instanceof Element) {
-          let stash = getStashEl(document.activeElement);
-          if (stash) {
-            let next = stash.nextElementSibling;
-            if (next) {
-              next.focus();
-              event.preventDefault();
-            }
-            return;
-          }
-        }
-        let first = document.getElementById('stash-list').firstElementChild;
-        if (first && first !== document.activeElement) {
-          first.focus();
-          event.preventDefault();
-        }
+        moveFocus('down', event);
       }
     },
     ready: function () {
