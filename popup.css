@@ -138,6 +138,7 @@ input-row button {
 .mdl-list__item-secondary-content {
   display: none !important;
   flex-flow: row !important;
+  margin-left: 0 !important;
 }
 
 .stash:hover .mdl-list__item-secondary-content,
