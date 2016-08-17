@@ -7,9 +7,15 @@ let fixIsDirty = () => {
   }
 };
 
+let tryToFocusOnInput = () => {
+  let inputEl = document.querySelector('.mdl-textfield__input');
+  if (inputEl) inputEl.focus();
+};
+
 let getStashEl = el => el.closest('.stash');
 
-let init = ([highlightedTabs, windowTabs, stashes, messages]) => {
+let init = ([highlightedTabs, windowTabs, stashes, messages,
+  originalStashName]) => {
   let mode;
   if (windowTabs.length == 1) {
     mode = 'singleTab';
@@ -20,10 +26,6 @@ let init = ([highlightedTabs, windowTabs, stashes, messages]) => {
       mode = 'default';
     }
   }
-
-  let originalStashName = chrome.extension.getBackgroundPage()
-    .sessionStorage.getItem(
-    getStashNameStorageKey(highlightedTabs[0].windowId));
 
   let stashNameTab;
   if (mode == 'singleTab' && originalStashName) {
@@ -80,9 +82,7 @@ let init = ([highlightedTabs, windowTabs, stashes, messages]) => {
       deleteStash: deleteStash,
       gotIt: function () {
         setMessageRead('welcome');
-        setTimeout(() => {
-          document.querySelector('.mdl-textfield__input').focus();
-        }, 100);
+        setTimeout(tryToFocusOnInput, 100);
       },
       isEmpty: _.isEmpty,
       handleFocus: function (event) {
@@ -135,7 +135,10 @@ let init = ([highlightedTabs, windowTabs, stashes, messages]) => {
         }
       }
     },
-    ready: fixIsDirty
+    ready: function () {
+      fixIsDirty();
+      tryToFocusOnInput();
+    }
   });
 
   chrome.storage.onChanged.addListener((changes, areaName) => {
@@ -155,5 +158,11 @@ Promise.all([
   chrome.promise.tabs.query({ currentWindow: true, highlighted: true }),
   chrome.promise.tabs.query({ currentWindow: true }),
   getStashes(),
-  getMessages()
+  getMessages(),
+  chrome.promise.windows.getCurrent()
+    .then(currentWindow => {
+      let stashNameStorageKey = getStashNameStorageKey(currentWindow.id);
+      return chrome.promise.storage.local.get(stashNameStorageKey)
+        .then(items => items[stashNameStorageKey]);
+    })
 ]).then(init);
