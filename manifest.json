@@ -1,6 +1,6 @@
 {
   "name": "Stash Tabs",
-  "version": "1.12",
+  "version": "1.13",
   "description": "Close the tabs you don't need at the moment and get back to them later. A lightweight solution to the problem of too many tabs.",
   "permissions": [
     "tabs", "storage"
