@@ -23,7 +23,7 @@ let transformTabsForStorage = (tabs) => tabs.map(tab =>
   })
 );
 
-// Used to store stash names in session storage.
+// Used to store stash names in local storage.
 let getStashNameStorageKey = windowId => 'stashName_' + windowId;
 
 // Used to store data on stashes in sync storage.
