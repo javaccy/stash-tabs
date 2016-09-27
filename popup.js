@@ -8,8 +8,10 @@ let fixIsDirty = () => {
 };
 
 let tryToFocusOnInput = () => {
-  let inputEl = document.querySelector('.mdl-textfield__input');
-  if (inputEl) inputEl.focus();
+  let inputEls = Array.prototype.slice.call(
+    document.querySelectorAll('.mdl-textfield__input'));
+  _.remove(inputEls, inputEl => inputEl.offsetParent === null);
+  if (inputEls.length) inputEls[0].focus();
 };
 
 let getStashEl = el => el.closest('.stash');
