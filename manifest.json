@@ -1,7 +1,7 @@
 {
   "name": "Stash Tabs",
-  "version": "1.16",
-  "description": "Close the tabs you don't need at the moment without losing them. A lightweight solution to the problem of too many tabs.",
+  "version": "1.17",
+  "description": "Close + save the tabs you don't need at the moment. A lightweight solution to the problem of too many tabs.",
   "permissions": [
     "tabs", "storage"
   ],
