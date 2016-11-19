@@ -39,7 +39,7 @@
       <tip v-if="!messages.openStash && !isEmpty(stashes)">
         <i class="material-icons">info_outline</i>
         <div class="content">
-          Your stashes are displayed below. If you click one, it goes from this popup into a new window.
+          Your stashes are displayed below. If you click one, it's opened in a new window, and removed from the list in this popup.
         </div>
       </tip>
       <input-row v-show="mode == 'default'">
@@ -68,7 +68,7 @@
       <li role="button" tabindex="0" class="stash mdl-list__item mdl-list__item--two-line" v-for="stash in stashes | order-by 'timestamp' -1" v-on:click="unstash($key, stash)"  @keydown.enter="unstash($key, stash)" @keydown.space="unstash($key, stash)" v-on:focus="handleFocus" v-on:blur="handleBlur">
         <span class="mdl-list__item-primary-content">
         {{ stash.name || stashNamePlaceholder }}
-        <span class="mdl-list__item-sub-title">{{ stash.tabs.length | tabs }}, {{ stash.timestamp | from-now }}</span>
+        <span class="mdl-list__item-sub-title">{{ stash.tabs.length | tabs }} &bull; {{ stash.timestamp | from-now }}</span>
         </span>
         <span class="mdl-list__item-secondary-content">
           <button v-on:click.stop="topUp($key)" @keydown.enter.stop @keydown.space.stop class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored hint--top hint--rounded" aria-label="Stash {{ topUpTabsLabel }} here" v-on:focus="handleFocus" v-on:blur="handleBlur">
