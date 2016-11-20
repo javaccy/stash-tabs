@@ -69,7 +69,7 @@ welcome logo {
   --size: 64px;
   width: var(--size);
   height: var(--size);
-  background-color: #9ccc65;
+  background-color: #8BC34A;
   margin-top: -20px;
   margin-bottom: -5px;
   image-rendering: pixelated;
