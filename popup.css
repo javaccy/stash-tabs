@@ -88,7 +88,7 @@ tip {
   background-color: #FAFAFA;
   display: flex;
   padding: 16px;
-  margin: 8px 0 10px;
+  margin: 8px 0 13px;
   border-radius: 3px;
   border: 1px solid rgba(0,0,0,.12);
 }
@@ -129,7 +129,7 @@ button.mdl-button.mdl-button--colored.mdl-button--raised {
 }
 
 .mdl-list {
-  margin: 0 16px 16px !important;
+  margin: 3px 16px 16px !important;
   padding: 0 !important;
   border-radius: 3px;
   border: 1px solid rgba(0,0,0,.12);
