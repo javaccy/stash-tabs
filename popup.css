@@ -29,6 +29,7 @@ html {
 
 .mdl-textfield__input, .mdl-textfield__label {
   font-size: 14px;
+  font-family: Roboto;
 }
 
 .mdl-textfield__label {
@@ -84,19 +85,17 @@ header {
 }
 
 tip {
-  background-color: #F5F5F5;
+  background-color: #FAFAFA;
   display: flex;
-  align-items: center;
-  color: rgba(0,0,0,.54);
-  padding: 18px 16px;
+  padding: 16px;
   margin: 8px 0 10px;
-  border-radius: 2px;
+  border-radius: 3px;
+  border: 1px solid rgba(0,0,0,.12);
 }
 
 tip i {
-  width: 64px;
-  margin: -4px;
-  font-size: 48px !important;
+  width: 50px;
+  font-size: 36px !important;
   color: #8BC34A;
 }
 
@@ -130,16 +129,20 @@ button.mdl-button.mdl-button--colored.mdl-button--raised {
 }
 
 .mdl-list {
-  margin: 0 !important;
+  margin: 0 16px 16px !important;
   padding: 0 !important;
+  border-radius: 3px;
+  border: 1px solid rgba(0,0,0,.12);
 }
 
 .stash {
   outline: none;
-  border-top: 1px solid rgba(0,0,0,.12);
+  border-bottom: 1px solid rgba(0,0,0,.12);
   cursor: pointer;
   overflow: visible;
   position: relative;
+  background: #FAFAFA;
+  letter-spacing: 0.02em;
 }
 
 .mdl-list__item--two-line {
@@ -164,18 +167,12 @@ button.mdl-button.mdl-button--colored.mdl-button--raised {
   display: flex !important;
 }
 
-.stash.focused::before {
-  content: "";
-  width: 3px;
-  top: -1px;
-  bottom: -1px;
-  background-color: #2196F3;
-  position: absolute;
-  left: 0;
+.stash.focused {
+  background-color: #f5f5f5;
 }
 
 .stash:last-child {
-  border-bottom: 1px solid transparent;
+  border-bottom: none;
 }
 
 .mdl-list__item-secondary-content button {
