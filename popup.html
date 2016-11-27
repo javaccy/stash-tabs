@@ -64,7 +64,7 @@
         <button v-on:click="stashTabs" tabindex="-1" class="mdl-button mdl-js-button mdl-button--colored mdl-button--raised">Stash {{ highlightedTabsLenth | tabs }}</button>
       </input-row>
     </header>
-    <ul id="stash-list" class="mdl-list">
+    <ul id="stash-list" class="mdl-list" v-if="!isEmpty(stashes)">
       <li role="button" tabindex="0" class="stash mdl-list__item mdl-list__item--two-line" v-for="stash in stashes | order-by 'timestamp' -1" v-on:click="unstash($key, stash)"  @keydown.enter="unstash($key, stash)" @keydown.space="unstash($key, stash)" v-on:focus="handleFocus" v-on:blur="handleBlur">
         <span class="mdl-list__item-primary-content">
         {{ stash.name || stashNamePlaceholder }}
