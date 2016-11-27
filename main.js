@@ -35,9 +35,6 @@ let getTabStorageKey = (stashId, tabIndex) => 'tab_' + stashId + '_' + tabIndex;
 let getStashes = function () {
   return chrome.promise.storage.sync.get(null)
     .then(items => {
-      // 'stashes' is a legacy key, around Sep 2016 this line should be removed.
-      if ('stashes' in items)
-        return items.stashes;
       let stashes = {};
       for (let key in items) {
         let stashMatches = key.match(/^stash_(.*)/);
@@ -70,8 +67,6 @@ let setStashes = function (stashes) {
   }
   return chrome.promise.storage.sync.get(null)
     .then(currentItems => {
-      // 'stashes' is a legacy key, around Sep 2016 this line should be removed.
-      if ('stashes' in currentItems) itemsToRemove.push('stashes');
       for (let key in currentItems) {
         if (key.startsWith('stash_') || key.startsWith('tab_')) {
           if (!(key in itemsToStore))
