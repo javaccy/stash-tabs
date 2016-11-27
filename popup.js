@@ -89,13 +89,15 @@ let init = ([highlightedTabs, windowTabs, stashes, messages,
     },
     methods: {
       stashWindow: function () {
-        saveStash(this.stashNameWindow, windowTabs);
+        saveStash(this.stashNameWindow, windowTabs,
+          _.findIndex(windowTabs, { 'active': true }));
       },
       stashTab: function () {
-        saveStash(this.stashNameTab, highlightedTabs);
+        saveStash(this.stashNameTab, highlightedTabs, 0);
       },
       stashTabs: function () {
-        saveStash(this.stathNameTabs, highlightedTabs);
+        saveStash(this.stathNameTabs, highlightedTabs,
+          _.findIndex(highlightedTabs, { 'active': true }));
       },
       topUp: function (stashId) {
         topUp(stashId, highlightedTabs);

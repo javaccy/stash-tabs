@@ -97,13 +97,14 @@ let setMessageRead = function (name) {
   });
 };
 
-let saveStash = function (name, tabs) {
+let saveStash = function (name, tabs, activeTabIndex) {
   getStashes()
     .then(stashes => {
       stashes[getRandomString(10)] = {
         name: name.trim(),
         timestamp: (new Date()).toISOString(),
-        tabs: transformTabsForStorage(tabs)
+        tabs: transformTabsForStorage(tabs),
+        activeTabIndex: activeTabIndex
       };
       return setStashes(stashes);
     })
@@ -117,8 +118,10 @@ let openStash = function (stash) {
     { url: stash.tabs.map(tab => tab.url) });
   return windowPromise
     .then(window => {
-      return chrome.promise.tabs.update(window.tabs[window.tabs.length - 1].id,
-        { active: true });
+      let activeTabIndex = ('activeTabIndex' in stash) ? stash.activeTabIndex :
+        (window.tabs.length - 1);
+      return chrome.promise.tabs.update(window.tabs[activeTabIndex].id,
+          { active: true });
     })
     .then(() => {
       return windowPromise;
