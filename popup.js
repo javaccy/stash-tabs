@@ -43,8 +43,21 @@ let moveFocus = (direction, event) => {
   }
 };
 
-let init = ([highlightedTabs, windowTabs, stashes, messages,
-  originalStashName]) => {
+let init = async function () {
+  let [
+    highlightedTabs,
+    windowTabs,
+    stashes,
+    messages,
+    originalStashName
+  ] = await Promise.all([
+    chrome.promise.tabs.query({ currentWindow: true, highlighted: true }),
+    chrome.promise.tabs.query({ currentWindow: true }),
+    getStashes(),
+    getMessages(),
+    getOriginalStashName()
+  ]);
+
   let mode;
   if (windowTabs.length == 1) {
     mode = 'singleTab';
@@ -140,11 +153,10 @@ let init = ([highlightedTabs, windowTabs, stashes, messages,
     }
   });
 
-  chrome.storage.onChanged.addListener((changes, areaName) => {
-    Promise.all([getStashes(), getMessages()]).then(([stashes, messages]) => {
-      vm.stashes = stashes;
-      vm.messages = messages;
-    });
+  chrome.storage.onChanged.addListener(async (changes, areaName) => {
+    let [stashes, messages] = await Promise.all([getStashes(), getMessages()]);
+    vm.stashes = stashes;
+    vm.messages = messages;
   });
 
   // Workaround for https://bugs.chromium.org/p/chromium/issues/detail?id=307912
@@ -153,15 +165,4 @@ let init = ([highlightedTabs, windowTabs, stashes, messages,
   }, 200)
 };
 
-Promise.all([
-  chrome.promise.tabs.query({ currentWindow: true, highlighted: true }),
-  chrome.promise.tabs.query({ currentWindow: true }),
-  getStashes(),
-  getMessages(),
-  chrome.promise.windows.getCurrent()
-    .then(currentWindow => {
-      let stashNameStorageKey = getStashNameStorageKey(currentWindow.id);
-      return chrome.promise.storage.local.get(stashNameStorageKey)
-        .then(items => items[stashNameStorageKey]);
-    })
-]).then(init);
+init();
