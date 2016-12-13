@@ -1,6 +1,6 @@
 {
   "name": "Stash Tabs",
-  "version": "1.25",
+  "version": "1.26",
   "minimum_chrome_version": "55",
   "description": "Close + save the tabs you don't need at the moment. A lightweight solution to the problem of too many tabs.",
   "permissions": [
@@ -8,7 +8,6 @@
   ],
   "browser_action": {
       "default_title": "Stash tabs",
-      "default_icon": "img/icon.png",
       "default_popup": "popup.html"
   },
   "manifest_version": 2,
