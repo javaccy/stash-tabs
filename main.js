@@ -12,7 +12,7 @@ let getRandomString = function (length) {
     text += possible.charAt(Math.floor(Math.random() * possible.length));
   }
   return text;
-}
+};
 
 // Converts Chrome API's array of tabs to a serializable representation.
 let transformTabsForStorage = (tabs) => tabs.map(tab =>
