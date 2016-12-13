@@ -19,7 +19,8 @@ html {
   background-color: rgba(0, 0, 0, 0.05);
 }
 
-.mdl-button--raised.mdl-button--colored.mdl-button--raised:hover {
+.mdl-button--raised.mdl-button--colored.mdl-button--raised:hover,
+.mdl-button--raised.mdl-button--colored.mdl-button--raised:focus {
   background-color: rgba(227, 242, 253, 0.4);
 }
 
@@ -61,19 +62,6 @@ welcome {
 welcome section,
 welcome footer {
   margin: 48px 0;
-}
-
-welcome logo {
-  display: inline-block;
-  -webkit-mask-image: url('img/icon.png');
-  -webkit-mask-size: contain;
-  --size: 64px;
-  width: var(--size);
-  height: var(--size);
-  background-color: #8BC34A;
-  margin-top: -20px;
-  margin-bottom: -5px;
-  image-rendering: pixelated;
 }
 
 welcome img {
