@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="lib/material.min.css">
   <link rel="stylesheet" href="fonts/fonts.css">
   <link href="lib/hint.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="fonts/linearicons/style.css">
   <link href="popup.css" rel="stylesheet" type="text/css">
   <script src="lib/chrome-promise.js"></script>
   <script src="lib/lodash.js"></script>
@@ -36,7 +37,7 @@
   <main v-else @keydown.up="up" @keydown.down="down">
     <header>
       <tip v-if="!messages.openStash && !isEmpty(stashes)">
-        <i class="material-icons">info_outline</i>
+        <i class="lnr lnr-pointer-up" aria-hidden="true"></i>
         <div class="content">
           Your stashes are displayed below. If you click one, it's opened in a new window, and removed from the list in this popup.
         </div>
@@ -71,10 +72,10 @@
         </span>
         <span class="mdl-list__item-secondary-content">
           <button v-on:click.stop="topUp($key)" @keydown.enter.stop @keydown.space.stop class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored hint--top hint--rounded" aria-label="Stash {{ topUpTabsLabel }} here" v-on:focus="handleFocus" v-on:blur="handleBlur">
-            <i class="material-icons">add</i>
+            <i class="lnr lnr-plus-circle"></i>
           </button>
           <button v-on:click.stop="deleteStash($key)" @keydown.enter.stop @keydown.space.stop class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored hint--top hint--rounded" aria-label="Delete" v-on:focus="handleFocus" v-on:blur="handleBlur">
-            <i class="material-icons">delete</i>
+            <i class="lnr lnr-trash"></i>
           </button>
         </span>
       </li>

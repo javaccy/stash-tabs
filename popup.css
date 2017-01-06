@@ -28,6 +28,12 @@ html {
   overflow: visible;
 }
 
+.mdl-button--icon i {
+  position: relative;
+  left: 1px;
+  top: 1px;
+}
+
 .mdl-textfield__input, .mdl-textfield__label {
   font-size: 14px;
   font-family: Roboto;
