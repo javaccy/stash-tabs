@@ -3,7 +3,6 @@
 
 <head>
   <title>Popup</title>
-  <link rel="stylesheet" href="lib/material.min.css">
   <link rel="stylesheet" href="fonts/fonts.css">
   <link href="lib/hint.min.css" rel="stylesheet" type="text/css">
   <link rel="stylesheet" href="fonts/linearicons/style.css">
@@ -12,26 +11,28 @@
   <script src="lib/lodash.js"></script>
   <script src="main.js"></script>
   <script src="lib/moment.min.js"></script>
-  <script src="lib/material.min.js"></script>
   <script src="lib/vue.min.js"></script>
   <script src="popup.js"></script>
 </head>
 
 <body v-cloak>
-  <welcome v-show="!messages.welcome">
+  <welcome v-if="!messages.welcome">
     <section>
+      <h1>Welcome!</h1>
       <div>When you <strong>stash tabs</strong>, they are closed and saved in this popup.</div>
     </section>
     <section>
       <img src="img/cmd.svg">
-      <div>You can <strong>cherry-pick</strong> tabs to stash by clicking tab handles while holding the <key>{{ modifierKey }}</key> key.</div>
+      <div>You can <strong>cherry-pick</strong> tabs to stash by clicking tab handles while holding the
+        <key>{{ modifierKey }}</key> key.</div>
     </section>
     <section>
       <img src="img/shift.svg">
-      <div>Or better yet, use the <key>Shift</key> key that works in the same way, but selects a <strong>range</strong> of tabs.</div>
+      <div>Or better yet, use the
+        <key>Shift</key> key that works in the same way, but selects a <strong>range</strong> of tabs.</div>
     </section>
     <footer>
-      <button v-on:click="gotIt" class="mdl-button mdl-js-button mdl-button--colored mdl-button--raised">Got it!</button>
+      <button v-on:click="gotIt" class="button-text">Got it!</button>
     </footer>
   </welcome>
   <main v-else @keydown.up="up" @keydown.down="down">
@@ -42,39 +43,32 @@
           Your stashes are displayed below. If you click one, it's opened in a new window, and removed from the list in this popup.
         </div>
       </tip>
-      <input-row v-show="mode == 'default'">
-        <div class="mdl-textfield mdl-js-textfield new-stash-name">
-          <input class="mdl-textfield__input" type="text" id="new-stash-name-window" v-model="stashNameWindow" @keydown.enter="stashWindow">
-          <label class="mdl-textfield__label" for="new-stash-name-window">Type stash name & hit Enter</label>
-        </div>
-        <button v-on:click="stashWindow" tabindex="-1" class="mdl-button mdl-js-button mdl-button--colored mdl-button--raised">Stash window</button>
+      <input-row v-if="mode == 'default'">
+        <input class="new-stash-name" type="text" id="new-stash-name-window" v-model="stashNameWindow" @keydown.enter="stashWindow"
+          placeholder="Type stash name & hit Enter">
+        <button v-on:click="stashWindow" tabindex="-1" class="button-text">Stash window</button>
       </input-row>
-      <input-row v-show="mode == 'default' || mode == 'singleTab'">
-        <div class="mdl-textfield mdl-js-textfield new-stash-name">
-          <input class="mdl-textfield__input" type="text" id="new-stash-name-tab" v-model="stashNameTab" @keydown.enter="stashTab">
-          <label class="mdl-textfield__label" for="new-stash-name-tab">Type stash name & hit Enter</label>
-        </div>
-        <button v-on:click="stashTab" tabindex="-1" class="mdl-button mdl-js-button mdl-button--colored mdl-button--raised">Stash this tab</button>
+      <input-row v-if="mode == 'default' || mode == 'singleTab'">
+        <input class="new-stash-name" type="text" id="new-stash-name-tab" v-model="stashNameTab" @keydown.enter="stashTab" placeholder="Type stash name & hit Enter">
+        <button v-on:click="stashTab" tabindex="-1" class="button-text">Stash this tab</button>
       </input-row>
-      <input-row v-show="mode == 'selection'">
-        <div class="mdl-textfield mdl-js-textfield new-stash-name">
-          <input class="mdl-textfield__input" type="text" id="new-stash-name-tabs" v-model="stathNameTabs" @keydown.enter="stashTabs">
-          <label class="mdl-textfield__label" for="new-stash-name-tabs">Type stash name & hit Enter</label>
-        </div>
-        <button v-on:click="stashTabs" tabindex="-1" class="mdl-button mdl-js-button mdl-button--colored mdl-button--raised">Stash {{ highlightedTabsLenth | tabs }}</button>
+      <input-row v-if="mode == 'selection'">
+        <input class="new-stash-name" type="text" id="new-stash-name-tabs" v-model="stathNameTabs" @keydown.enter="stashTabs" placeholder="Type stash name & hit Enter">
+        <button v-on:click="stashTabs" tabindex="-1" class="button-text">Stash {{ highlightedTabsLenth | tabs }}</button>
       </input-row>
     </header>
-    <ul id="stash-list" class="mdl-list" v-if="!isEmpty(stashes)">
-      <li role="button" tabindex="0" class="stash mdl-list__item mdl-list__item--two-line" v-for="stash in stashes | order-by 'timestamp' -1" v-on:click="unstash($key, stash)"  @keydown.enter="unstash($key, stash)" @keydown.space="unstash($key, stash)" v-on:focus="handleFocus" v-on:blur="handleBlur">
-        <span class="mdl-list__item-primary-content">
-        {{ stash.name || stashNamePlaceholder }}
-        <span class="mdl-list__item-sub-title">{{ stash.tabs.length | tabs }} &bull; {{ stash.timestamp | from-now }}</span>
+    <ul id="stash-list" v-if="!isEmpty(stashes)">
+      <li role="button" tabindex="0" class="stash" v-for="stash in stashes | order-by 'timestamp' -1" v-on:click="unstash($key, stash)"
+        @keydown.enter="unstash($key, stash)" @keydown.space="unstash($key, stash)" v-on:focus="handleFocus" v-on:blur="handleBlur">
+        <span class="stash-primary-content">
+          <span class="stash-title">{{ stash.name || stashNamePlaceholder }}</span>
+        <span class="stash-sub-title">{{ stash.tabs.length | tabs }} &bull; {{ stash.timestamp | from-now }}</span>
         </span>
-        <span class="mdl-list__item-secondary-content">
-          <button v-on:click.stop="topUp($key)" @keydown.enter.stop @keydown.space.stop class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored hint--top hint--rounded" aria-label="Stash {{ topUpTabsLabel }} here" v-on:focus="handleFocus" v-on:blur="handleBlur">
+        <span class="stash-secondary-content">
+          <button v-on:click.stop="topUp($key)" @keydown.enter.stop @keydown.space.stop class="button-icon hint--top hint--rounded" aria-label="Stash {{ topUpTabsLabel }} here" v-on:focus="handleFocus" v-on:blur="handleBlur">
             <i class="lnr lnr-plus-circle"></i>
           </button>
-          <button v-on:click.stop="deleteStash($key)" @keydown.enter.stop @keydown.space.stop class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored hint--top hint--rounded" aria-label="Delete" v-on:focus="handleFocus" v-on:blur="handleBlur">
+          <button v-on:click.stop="deleteStash($key)" @keydown.enter.stop @keydown.space.stop class="button-icon hint--top hint--rounded" aria-label="Delete" v-on:focus="handleFocus" v-on:blur="handleBlur">
             <i class="lnr lnr-trash"></i>
           </button>
         </span>

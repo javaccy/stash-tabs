@@ -1,15 +1,8 @@
 'use strict';
 
-// Makes sure MDL hides/shows placeholder when value is set programmatically.
-let fixIsDirty = () => {
-  for (let input of document.querySelectorAll('.mdl-textfield__input')) {
-    input.parentElement.classList.toggle('is-dirty', !!input.value);
-  }
-};
-
 let tryToFocusOnInput = () => {
   let inputEls = Array.prototype.slice.call(
-    document.querySelectorAll('.mdl-textfield__input'));
+    document.querySelectorAll('input'));
   _.remove(inputEls, inputEl => inputEl.offsetParent === null);
   if (inputEls.length) inputEls[0].focus();
 };
@@ -148,7 +141,6 @@ let init = async function () {
       }
     },
     ready: function () {
-      fixIsDirty();
       tryToFocusOnInput();
     }
   });
