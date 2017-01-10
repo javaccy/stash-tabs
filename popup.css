@@ -103,7 +103,6 @@ tip {
   background-color: #FAFAFA;
   display: flex;
   padding: 16px;
-  margin-bottom: 24px;
   border-radius: 3px;
   border: 1px solid var(--border-color);
 }
@@ -122,11 +121,7 @@ input-row {
   display: flex;
   align-items: center;
   text-align: right;
-  margin-bottom: 24px;
-}
-
-input-row:last-child {
-  margin-bottom: 0;
+  margin: 24px 0;
 }
 
 input-row input {
@@ -141,7 +136,6 @@ input-row .button-text {
 
 #stash-list {
   margin: 0;
-  margin-top: 24px;
   padding: 0;
   list-style: none;
 }
