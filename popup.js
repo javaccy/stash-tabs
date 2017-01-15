@@ -1,21 +1,20 @@
 'use strict';
 
-let tryToFocusOnInput = () => {
-  let inputEls = Array.prototype.slice.call(
+const tryToFocusOnInput = () => {
+  const inputEls = Array.prototype.slice.call(
     document.querySelectorAll('input'));
   _.remove(inputEls, inputEl => inputEl.offsetParent === null);
   if (inputEls.length) inputEls[0].focus();
 };
 
-let getStashEl = el => el.closest('.stash');
+const getStashEl = el => el.closest('.stash');
 
-// Moves focus to next/previous stash. Direction is 'up' or 'down'.
-let moveFocus = (direction, event) => {
-  let nextStash;
+/** Moves focus to next/previous stash. `direction` is 'up' or 'down'. */
+const moveFocus = (direction, event) => {
   if (document.activeElement instanceof Element) {
-    let stash = getStashEl(document.activeElement);
+    const stash = getStashEl(document.activeElement);
     if (stash) {
-      let next = stash[{
+      const next = stash[{
         up: 'previousElementSibling',
         down: 'nextElementSibling'
       }[direction]];
@@ -26,7 +25,7 @@ let moveFocus = (direction, event) => {
       return;
     }
   }
-  let first = document.getElementById('stash-list')[{
+  const first = document.getElementById('stash-list')[{
     up: 'lastElementChild',
     down: 'firstElementChild'
   }[direction]];
@@ -36,8 +35,8 @@ let moveFocus = (direction, event) => {
   }
 };
 
-let init = async function () {
-  let [
+const init = async function () {
+  const [
     highlightedTabs,
     windowTabs,
     stashes,
@@ -51,23 +50,25 @@ let init = async function () {
     getOriginalStashName()
   ]);
 
-  let mode;
-  if (windowTabs.length == 1) {
-    mode = 'singleTab';
-  } else {
-    if (highlightedTabs.length > 1) {
-      mode = 'selection';
+  const mode = (() => {
+    if (windowTabs.length == 1) {
+      return 'singleTab';
     } else {
-      mode = 'default';
+      if (highlightedTabs.length > 1) {
+        return 'selection';
+      } else {
+        return 'default';
+      }
     }
-  }
+  })();
 
-  let stashNameTab;
-  if (mode == 'singleTab' && originalStashName) {
-    stashNameTab = originalStashName;
-  } else {
-    stashNameTab = highlightedTabs[0].title || '';
-  }
+  const stashNameTab = (() => {
+    if (mode == 'singleTab' && originalStashName) {
+      return originalStashName;
+    } else {
+      return highlightedTabs[0].title || '';
+    }
+  })();
 
   Vue.filter('tabs', numTabs => {
     return numTabs.toString() + (numTabs == 1 ? ' tab' : ' tabs');
@@ -77,7 +78,7 @@ let init = async function () {
     return moment(timestamp).fromNow();
   });
 
-  let vm = new Vue({
+  const vm = new Vue({
     el: 'html',
     data: {
       mode: mode,
@@ -126,9 +127,9 @@ let init = async function () {
         getStashEl(event.target).classList.add('focused');
       },
       handleBlur: function (event) {
-        let stashOut = getStashEl(event.target);
+        const stashOut = getStashEl(event.target);
         if (event.relatedTarget instanceof Element) {
-          let stashIn = getStashEl(event.relatedTarget);
+          const stashIn = getStashEl(event.relatedTarget);
           if (stashIn === stashOut) return;
         }
         stashOut.classList.remove('focused');
@@ -146,7 +147,7 @@ let init = async function () {
   });
 
   chrome.storage.onChanged.addListener(async (changes, areaName) => {
-    let [stashes, messages] = await Promise.all([getStashes(), getMessages()]);
+    const [stashes, messages] = await Promise.all([getStashes(), getMessages()]);
     vm.stashes = stashes;
     vm.messages = messages;
   });

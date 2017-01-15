@@ -4,7 +4,7 @@ chrome.runtime.onStartup.addListener(() => {
 
 window.unstash = async function (stashId, stash, shouldUpdateMessages) {
   await deleteStash(stashId);
-  let chromeWindow = await openStash(stash);
+  const chromeWindow = await openStash(stash);
   await chrome.promise.storage.local.set(
     { [getStashNameStorageKey(chromeWindow.id)]: stash.name });
   if (shouldUpdateMessages) {
