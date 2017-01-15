@@ -37,11 +37,13 @@ const getStashes = async function () {
   const stashes = {};
   for (let key in items) {
     const stashMatches = key.match(/^stash_(.*)/);
-    if (stashMatches)
+    if (stashMatches) {
       _.merge(stashes, { [stashMatches[1]]: items[key] });
+    }
     const tabMatches = key.match(/^tab_(.*)_(\d*)/);
-    if (tabMatches)
+    if (tabMatches) {
       _.set(stashes, [tabMatches[1], 'tabs', parseInt(tabMatches[2], 10)], items[key]);
+    }
   }
   return stashes;
 };
@@ -66,18 +68,21 @@ const setStashes = async function (stashes) {
   const currentItems = await chrome.promise.storage.sync.get(null);
   for (let key in currentItems) {
     if (key.startsWith('stash_') || key.startsWith('tab_')) {
-      if (!(key in itemsToStore))
-        itemsToRemove.push(key)
-      else if (_.isEqual(currentItems[key], itemsToStore[key]))
+      if (!(key in itemsToStore)) {
+        itemsToRemove.push(key);
+      } else if (_.isEqual(currentItems[key], itemsToStore[key])) {
         delete itemsToStore[key];
+      }
     }
   }
 
   let removePromise, setPromise;
-  if (itemsToRemove)
+  if (itemsToRemove) {
     removePromise = chrome.promise.storage.sync.remove(itemsToRemove);
-  if (!_.isEmpty(itemsToStore))
+  }
+  if (!_.isEmpty(itemsToStore)) {
     setPromise = chrome.promise.storage.sync.set(itemsToStore);
+  }
   await Promise.all([removePromise, setPromise]);
 };
 
@@ -117,7 +122,9 @@ const deleteStash = async function (stashId) {
 
 const topUp = async function (stashId, tabs) {
   const stashes = await getStashes();
-  if (!(stashId in stashes)) return;
+  if (!(stashId in stashes)) {
+    return;
+  };
   stashes[stashId].tabs = stashes[stashId].tabs.concat(
     transformTabsForStorage(tabs));
   stashes[stashId].timestamp = (new Date()).toISOString();

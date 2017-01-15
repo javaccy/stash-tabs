@@ -4,7 +4,9 @@ const tryToFocusOnInput = () => {
   const inputEls = Array.prototype.slice.call(
     document.querySelectorAll('input'));
   _.remove(inputEls, inputEl => inputEl.offsetParent === null);
-  if (inputEls.length) inputEls[0].focus();
+  if (inputEls.length) {
+    inputEls[0].focus();
+  };
 };
 
 const getStashEl = el => el.closest('.stash');
@@ -130,7 +132,9 @@ const init = async function () {
         const stashOut = getStashEl(event.target);
         if (event.relatedTarget instanceof Element) {
           const stashIn = getStashEl(event.relatedTarget);
-          if (stashIn === stashOut) return;
+          if (stashIn === stashOut) {
+            return;
+          };
         }
         stashOut.classList.remove('focused');
       },
