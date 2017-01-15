@@ -5,9 +5,10 @@ chrome.promise = new ChromePromise();
 
 const stashNamePlaceholder = 'Untitled stash';
 
-const getRandomString = function (length) {
-  let text = "";
-  const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+const getRandomString = function(length) {
+  let text = '';
+  const possible =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   for (let i = 0; i < length; i++) {
     text += possible.charAt(Math.floor(Math.random() * possible.length));
   }
@@ -15,13 +16,8 @@ const getRandomString = function (length) {
 };
 
 /** Converts Chrome API's array of tabs to a serializable representation. */
-const transformTabsForStorage = (tabs) => tabs.map(tab =>
-  ({
-    title: tab.title,
-    url: tab.url,
-    favIconUrl: tab.favIconUrl
-  })
-);
+const transformTabsForStorage = (tabs) => tabs.map(
+    tab => ({title: tab.title, url: tab.url, favIconUrl: tab.favIconUrl}));
 
 /** Used to store stash names in local storage. */
 const getStashNameStorageKey = windowId => 'stashName_' + windowId;
@@ -30,30 +26,33 @@ const getStashNameStorageKey = windowId => 'stashName_' + windowId;
 const getStashStorageKey = stashId => 'stash_' + stashId;
 
 /** Used to store a tab in the stash in sync storage. */
-const getTabStorageKey = (stashId, tabIndex) => 'tab_' + stashId + '_' + tabIndex;
+const getTabStorageKey = (stashId, tabIndex) =>
+    'tab_' + stashId + '_' + tabIndex;
 
-const getStashes = async function () {
+const getStashes = async function() {
   const items = await chrome.promise.storage.sync.get(null);
   const stashes = {};
   for (let key in items) {
     const stashMatches = key.match(/^stash_(.*)/);
     if (stashMatches) {
-      _.merge(stashes, { [stashMatches[1]]: items[key] });
+      _.merge(stashes, {[stashMatches[1]]: items[key]});
     }
     const tabMatches = key.match(/^tab_(.*)_(\d*)/);
     if (tabMatches) {
-      _.set(stashes, [tabMatches[1], 'tabs', parseInt(tabMatches[2], 10)], items[key]);
+      _.set(
+          stashes, [tabMatches[1], 'tabs', parseInt(tabMatches[2], 10)],
+          items[key]);
     }
   }
   return stashes;
 };
 
-const getMessages = async function () {
+const getMessages = async function() {
   const items = await chrome.promise.storage.sync.get('messages');
   return items['messages'] || {};
 };
 
-const setStashes = async function (stashes) {
+const setStashes = async function(stashes) {
   // We have to store tabs as individual items because of size limits of sync
   // API for a single item.
 
@@ -86,13 +85,13 @@ const setStashes = async function (stashes) {
   await Promise.all([removePromise, setPromise]);
 };
 
-const setMessageRead = async function (name) {
+const setMessageRead = async function(name) {
   const messages = await getMessages();
   messages[name] = true;
-  await chrome.promise.storage.sync.set({ messages: messages });
+  await chrome.promise.storage.sync.set({messages: messages});
 };
 
-const saveStash = async function (name, tabs, activeTabIndex) {
+const saveStash = async function(name, tabs, activeTabIndex) {
   const stashes = await getStashes();
   stashes[getRandomString(10)] = {
     name: name.trim(),
@@ -104,35 +103,35 @@ const saveStash = async function (name, tabs, activeTabIndex) {
   await chrome.promise.tabs.remove(tabs.map(tab => tab.id));
 };
 
-const openStash = async function (stash) {
+const openStash = async function(stash) {
   const window = await chrome.promise.windows.create(
-    { url: stash.tabs.map(tab => tab.url) });
+      {url: stash.tabs.map(tab => tab.url)});
   const activeTabIndex = ('activeTabIndex' in stash) ? stash.activeTabIndex :
-    (window.tabs.length - 1);
-  await chrome.promise.tabs.update(window.tabs[activeTabIndex].id,
-    { active: true });
+                                                       (window.tabs.length - 1);
+  await chrome.promise.tabs.update(
+      window.tabs[activeTabIndex].id, {active: true});
   return window;
 };
 
-const deleteStash = async function (stashId) {
+const deleteStash = async function(stashId) {
   const stashes = await getStashes();
   delete stashes[stashId];
   await setStashes(stashes);
 };
 
-const topUp = async function (stashId, tabs) {
+const topUp = async function(stashId, tabs) {
   const stashes = await getStashes();
   if (!(stashId in stashes)) {
     return;
   };
-  stashes[stashId].tabs = stashes[stashId].tabs.concat(
-    transformTabsForStorage(tabs));
+  stashes[stashId].tabs =
+      stashes[stashId].tabs.concat(transformTabsForStorage(tabs));
   stashes[stashId].timestamp = (new Date()).toISOString();
   await setStashes(stashes);
   await chrome.promise.tabs.remove(tabs.map(tab => tab.id));
 };
 
-const getOriginalStashName = async function () {
+const getOriginalStashName = async function() {
   const currentWindow = await chrome.promise.windows.getCurrent();
   const stashNameStorageKey = getStashNameStorageKey(currentWindow.id);
   const items = await chrome.promise.storage.local.get(stashNameStorageKey);
