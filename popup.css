@@ -192,7 +192,8 @@ input-row .button-text {
 }
 
 .stash-secondary-content {
-  display: none;
+  width: 0;
+  overflow: hidden;
   flex-flow: row;
   margin-left: 0;
 }
@@ -203,7 +204,8 @@ input-row .button-text {
 
 .stash:hover .stash-secondary-content,
 .stash.focused .stash-secondary-content {
-  display: flex;
+  width: initial;
+  overflow: initial;
 }
 
 .stash.focused {
